@@ -1,5 +1,18 @@
 package com.ite.taze;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.apache.olingo.odata2.api.edm.Edm;
+import org.apache.olingo.odata2.api.ep.entry.ODataEntry;
+import org.apache.olingo.odata2.api.ep.feed.ODataFeed;
+import org.apache.olingo.odata2.api.exception.ODataException;
+import org.apache.olingo.odata2.core.ep.feed.ODataDeltaFeedImpl;
+
 public class Invoice {
 
 	private String ShipName;
@@ -21,10 +34,12 @@ public class Invoice {
 	private int ProductID;
 	private String ProductName;
 	private double UnitPrice;
-	private int Quantity;
+	private short Quantity;
 	private float Discount;
 	private double ExtendedPrice;
 	private double Freight;
+	
+	Order order = new Order();
 
 	public String getShipName() {
 		return ShipName;
@@ -143,7 +158,7 @@ public class Invoice {
 	public int getQuantity() {
 		return Quantity;
 	}
-	public void setQuantity(int quantity) {
+	public void setQuantity(short quantity) {
 		Quantity = quantity;
 	}
 	public float getDiscount() {
@@ -165,7 +180,7 @@ public class Invoice {
 		Freight = freight;
 	}
 
-	public void setOrder_DetailAttribute(String key, Object value) 
+	public void setInvoiceAttributes(String key, Object value) throws IOException, ODataException 
 	{
 		if (key.equals("ShipName")) {
 			this.setShipName((String) value);
@@ -197,6 +212,30 @@ public class Invoice {
 			this.setSalesperson((String) value);
 		} else if (key.equals("OrderID")) {
 			this.setOrderID((int) value);
+	
+			ServicesForOrder servicesForOrder = new ServicesForOrder();
+			Map<String, Object> hmapForOrder = new HashMap<String, Object>();
+			List<ODataEntry> arrlistForOrder = new ArrayList<ODataEntry>();
+			List<Order> orderList = new ArrayList<Order>();
+
+			String serviceUrl = "http://services.odata.org/V2/Northwind/Northwind.svc";
+			String usedFormat = servicesForOrder.APPLICATION_JSON;
+			Edm edm = servicesForOrder.readEdm(serviceUrl);
+			
+			ODataFeed feedForOrder = servicesForOrder.readFeed(edm, serviceUrl, usedFormat, "Orders","Order_Details", "Product", (int)value);
+			arrlistForOrder = feedForOrder.getEntries();
+			
+			for (int i = 0; i < arrlistForOrder.size(); i++) {
+				
+				hmapForOrder = arrlistForOrder.get(i).getProperties();
+
+				for (Entry<String, Object> entry : hmapForOrder.entrySet()) {
+					String key1 = entry.getKey();
+					Object value1 = entry.getValue();
+					this.order.setOrderAttributes(key1, value1);
+				}
+				//orderList.add(order);
+			}
 		} else if (key.equals("ShipperName")) {
 			this.setShipperName((String) value);
 		} else if (key.equals("ProductID")) {
@@ -206,13 +245,13 @@ public class Invoice {
 		} else if (key.equals("UnitPrice")) {
 			this.setUnitPrice(new Double(value.toString()));
 		} else if (key.equals("Quantity")) {
-			this.setQuantity((int) value);
+			this.setQuantity((short) value);
 		} else if (key.equals("Discount")) {
 			this.setDiscount((float) value);
 		} else if (key.equals("ExtendedPrice")) {
-			this.setExtendedPrice((double) value);
+			this.setExtendedPrice(new Double(value.toString()));
 		} else if (key.equals("Freight")) {
-			this.setFreight((double) value);
+			this.setFreight(new Double(value.toString()));
 		}
 	}
 }

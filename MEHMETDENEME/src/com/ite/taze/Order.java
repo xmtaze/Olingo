@@ -94,7 +94,7 @@ public class Order {
 		ShipCountry = shipCountry;
 	}
 
-	public void setOrder(String key, Object value) 
+	public void setOrderAttributes(String key, Object value) 
 	{
 		if (key.equals("OrderID")) {
 			this.setOrderID((int) value);

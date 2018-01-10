@@ -5,12 +5,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Map.Entry;
 
 import org.apache.olingo.odata2.api.commons.HttpStatusCodes;
 import org.apache.olingo.odata2.api.edm.Edm;
@@ -18,14 +12,10 @@ import org.apache.olingo.odata2.api.edm.EdmEntityContainer;
 import org.apache.olingo.odata2.api.ep.EntityProvider;
 import org.apache.olingo.odata2.api.ep.EntityProviderReadProperties;
 import org.apache.olingo.odata2.api.ep.entry.ODataEntry;
-import org.apache.olingo.odata2.api.ep.feed.ODataDeltaFeed;
 import org.apache.olingo.odata2.api.ep.feed.ODataFeed;
 import org.apache.olingo.odata2.api.exception.ODataException;
 
-
-
-public class UsedFunctionsForOrder {
-	
+public class ServicesForInvoice {
 	public static final String HTTP_METHOD_PUT = "PUT";
 	public static final String HTTP_METHOD_POST = "POST";
 	public static final String HTTP_METHOD_GET = "GET";
@@ -44,28 +34,28 @@ public class UsedFunctionsForOrder {
 			return EntityProvider.readMetadata(content, false);
 		}
 
-		public ODataFeed readFeed(Edm edm, String serviceUri, String contentType, String entitySetName, String keyValue, String keyValue2) 
+		public ODataFeed readFeed(Edm edm, String serviceUri, String contentType, String entitySetName) 
 				throws IOException, ODataException {
 			EdmEntityContainer entityContainer = edm.getDefaultEntityContainer();
-			String absolutUri = createUri(serviceUri, entitySetName, keyValue, keyValue2);
+			String absolutUri = createUri(serviceUri, entitySetName);
 
 			InputStream content = execute(absolutUri, contentType, HTTP_METHOD_GET);
 			return EntityProvider.readFeed(contentType, entityContainer.getEntitySet(entitySetName), content,
 					EntityProviderReadProperties.init().build());
 		}
 	
-		public ODataEntry readEntry(Edm edm, String serviceUri, String contentType, String entitySetName, String keyValue)
+		public ODataEntry readEntry(Edm edm, String serviceUri, String contentType, String entitySetName)
 				throws IOException, ODataException {
-			return readEntry(edm, serviceUri, contentType, entitySetName, keyValue, null);
+			return readEntry(edm, serviceUri, contentType, entitySetName, null);
 		}
 
-		public ODataEntry readEntry(Edm edm, String serviceUri, String contentType, String entitySetName, String keyValue,
+		public ODataEntry readEntry(Edm edm, String serviceUri, String contentType, String entitySetName,
 				String expandRelationName) throws IOException, ODataException {
 			// working with the default entity container
 			EdmEntityContainer entityContainer = edm.getDefaultEntityContainer();
 			// create absolute uri based on service uri, entity set name with its
 			// key property value and optional expanded relation name
-			String absolutUri = createUri(serviceUri, entitySetName, keyValue, expandRelationName);
+			String absolutUri = createUri(serviceUri, entitySetName);
 			InputStream content = execute(absolutUri, contentType, HTTP_METHOD_GET);
 
 			return EntityProvider.readEntry(contentType, entityContainer.getEntitySet(entitySetName), content,
@@ -108,17 +98,17 @@ public class UsedFunctionsForOrder {
 			return content;
 		}
 
-		private String createUri(String serviceUri, String entitySetName, String id, String keyValue2) {
-			return createUri(serviceUri, entitySetName, id, null, keyValue2);
+		private String createUri(String serviceUri, String entitySetName) {
+			return createUri(serviceUri, entitySetName, null, null);
 		}
 		
-		private String createUri(String serviceUri, String entitySetName, String expand,  String id, String keyValue2) {
+		private String createUri(String serviceUri, String entitySetName, String expand,  String id) {
 			final StringBuilder absolutUri = new StringBuilder(serviceUri).append(SEPARATOR).append(entitySetName);
 			if (id != null) {
 				absolutUri.append("(").append(id).append(")");
 			}
 			if (expand != null) {
-				absolutUri.append("?$expand=").append(expand).append(SEPARATOR).append(keyValue2);
+				absolutUri.append("?$expand=").append(expand).append(SEPARATOR);
 			}
 			return absolutUri.toString();
 		}

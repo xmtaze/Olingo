@@ -30,34 +30,36 @@ import org.apache.olingo.odata2.api.ep.feed.ODataDeltaFeed;
 import org.apache.olingo.odata2.api.ep.feed.ODataFeed;
 import org.apache.olingo.odata2.api.exception.ODataException;
 
-public class MainForOrder {
+public class Main {
 
 
 	public static void main(String[] args) throws MalformedURLException, IOException, ODataException {
 
-		UsedFunctionsForOrder usedFunctionsForOrder = new UsedFunctionsForOrder();
-		Map<String, Object> hmapForOrder = new HashMap<String, Object>();
-		List<ODataEntry> arrlistForOrder = new ArrayList<ODataEntry>();
-		List<Order> orderList = new ArrayList<Order>();
+		ServicesForInvoice servicesForInvoice = new ServicesForInvoice();
+		Map<String, Object> hmapForInvoice = new HashMap<String, Object>();
+		List<ODataEntry> arrlistForInvoice = new ArrayList<ODataEntry>();
+		List<Invoice> InvoiceList = new ArrayList<Invoice>();
 
 		String serviceUrl = "http://services.odata.org/V2/Northwind/Northwind.svc";
-		String usedFormat = usedFunctionsForOrder.APPLICATION_JSON;
-		Edm edm = usedFunctionsForOrder.readEdm(serviceUrl);
+		String usedFormat = servicesForInvoice.APPLICATION_JSON;
+		Edm edm = servicesForInvoice.readEdm(serviceUrl);
 		
-		ODataFeed feedForOrder = usedFunctionsForOrder.readFeed(edm, serviceUrl, usedFormat, "Orders","Order_Details", "Product");
-		arrlistForOrder = feedForOrder.getEntries();
+		ODataFeed feedForInvoice = servicesForInvoice.readFeed(edm, serviceUrl, usedFormat, "Invoices");
+		arrlistForInvoice = feedForInvoice.getEntries();
 		
-		for (int i = 0; i < arrlistForOrder.size(); i++) {
-			Order order = new Order();
-			hmapForOrder = arrlistForOrder.get(i).getProperties();
+		for (int i = 0; i < arrlistForInvoice.size(); i++) {
+			Invoice Invoice = new Invoice();
+			hmapForInvoice = arrlistForInvoice.get(i).getProperties();
 
-			for (Entry<String, Object> entry : hmapForOrder.entrySet()) {
+			for (Entry<String, Object> entry : hmapForInvoice.entrySet()) {
 				String key = entry.getKey();
 				Object value = entry.getValue();
-				order.setOrder(key, value);
+				Invoice.setInvoiceAttributes(key, value);
 			}
-			orderList.add(order);
+			InvoiceList.add(Invoice);
 		}
+		
+		
 	}
 	
 }

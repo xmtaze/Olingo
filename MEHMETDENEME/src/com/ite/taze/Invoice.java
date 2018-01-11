@@ -38,7 +38,7 @@ public class Invoice {
 	private float Discount;
 	private double ExtendedPrice;
 	private double Freight;
-	
+
 	Order order = new Order();
 
 	public String getShipName() {
@@ -180,78 +180,81 @@ public class Invoice {
 		Freight = freight;
 	}
 
-	public void setInvoiceAttributes(String key, Object value) throws IOException, ODataException 
+	public void setInvoiceAttributes(String key, Object value, boolean control) throws IOException, ODataException 
 	{
-		if (key.equals("ShipName")) {
-			this.setShipName((String) value);
-		} else if (key.equals("ShipAddress")) {
-			this.setShipAddress((String) value);
-		} else if (key.equals("ShipCity")) {
-			this.setShipCity((String) value);
-		} else if (key.equals("ShipRegion")) {
-			this.setShipRegion((String) value);
-		} else if (key.equals("ShipPostalCode")) {
-			this.setShipPostalCode((String) value);
-		} else if (key.equals("ShipCountry")) {
-			this.setShipCountry((String) value);
-		} else if (key.equals("CustomerID")) {
-			this.setCustomerID((String) value);
-		} else if (key.equals("CustomerName")) {
-			this.setCustomerName((String) value);
-		} else if (key.equals("Address")) {
-			this.setAddress((String) value);
-		} else if (key.equals("City")) {
-			this.setCity((String) value);
-		} else if (key.equals("Region")) {
-			this.setRegion((String) value);
-		} else if (key.equals("PostalCode")) {
-			this.setPostalCode((String) value);
-		} else if (key.equals("Country")) {
-			this.setCountry((String) value);
-		} else if (key.equals("Salesperson")) {
-			this.setSalesperson((String) value);
-		} else if (key.equals("OrderID")) {
-			this.setOrderID((int) value);
-	
-			ServicesForOrder servicesForOrder = new ServicesForOrder();
-			Map<String, Object> hmapForOrder = new HashMap<String, Object>();
-			List<ODataEntry> arrlistForOrder = new ArrayList<ODataEntry>();
-			List<Order> orderList = new ArrayList<Order>();
+		if(control == true) {
+			if (key.equals("ShipName")) {
+				this.setShipName((String) value);
+			} else if (key.equals("ShipAddress")) {
+				this.setShipAddress((String) value);
+			} else if (key.equals("ShipCity")) {
+				this.setShipCity((String) value);
+			} else if (key.equals("ShipRegion")) {
+				this.setShipRegion((String) value);
+			} else if (key.equals("ShipPostalCode")) {
+				this.setShipPostalCode((String) value);
+			} else if (key.equals("ShipCountry")) {
+				this.setShipCountry((String) value);
+			} else if (key.equals("CustomerID")) {
+				this.setCustomerID((String) value);
+			} else if (key.equals("CustomerName")) {
+				this.setCustomerName((String) value);
+			} else if (key.equals("Address")) {
+				this.setAddress((String) value);
+			} else if (key.equals("City")) {
+				this.setCity((String) value);
+			} else if (key.equals("Region")) {
+				this.setRegion((String) value);
+			} else if (key.equals("PostalCode")) {
+				this.setPostalCode((String) value);
+			} else if (key.equals("Country")) {
+				this.setCountry((String) value);
+			} else if (key.equals("Salesperson")) {
+				this.setSalesperson((String) value);
+			} else if (key.equals("OrderID")) {
+				this.setOrderID((int) value);
 
-			String serviceUrl = "http://services.odata.org/V2/Northwind/Northwind.svc";
-			String usedFormat = servicesForOrder.APPLICATION_JSON;
-			Edm edm = servicesForOrder.readEdm(serviceUrl);
-			
-			ODataFeed feedForOrder = servicesForOrder.readFeed(edm, serviceUrl, usedFormat, "Orders","Order_Details", "Product", (int)value);
-			arrlistForOrder = feedForOrder.getEntries();
-			
-			for (int i = 0; i < arrlistForOrder.size(); i++) {
-				
-				hmapForOrder = arrlistForOrder.get(i).getProperties();
+				ServicesForOrder servicesForOrder = new ServicesForOrder();
+				Map<String, Object> hmapForOrder = new HashMap<String, Object>();
+				List<ODataEntry> arrlistForOrder = new ArrayList<ODataEntry>();
+				List<Order> orderList = new ArrayList<Order>();
 
-				for (Entry<String, Object> entry : hmapForOrder.entrySet()) {
-					String key1 = entry.getKey();
-					Object value1 = entry.getValue();
-					this.order.setOrderAttributes(key1, value1);
+				String serviceUrl = "http://services.odata.org/V2/Northwind/Northwind.svc";
+				String usedFormat = servicesForOrder.APPLICATION_JSON;
+				Edm edm = servicesForOrder.readEdm(serviceUrl);
+
+				ODataFeed feedForOrder = servicesForOrder.readFeed(edm, serviceUrl, usedFormat, "Orders","Order_Details", "Product", (int)value);
+				arrlistForOrder = feedForOrder.getEntries();
+
+				for (int i = 0; i < arrlistForOrder.size(); i++) {
+
+					hmapForOrder = arrlistForOrder.get(i).getProperties();
+
+					for (Entry<String, Object> entry : hmapForOrder.entrySet()) {
+						String key1 = entry.getKey();
+						Object value1 = entry.getValue();
+						this.order.setOrderAttributes(key1, value1, control);
+					}
+					order.setInvoice(this); //burada ekleme olayı
+					orderList.add(order);
 				}
-				//orderList.add(order);
+			} else if (key.equals("ShipperName")) {
+				this.setShipperName((String) value);
+			} else if (key.equals("ProductID")) {
+				this.setProductID((int) value);
+			} else if (key.equals("ProductName")) {
+				this.setProductName((String) value);
+			} else if (key.equals("UnitPrice")) {
+				this.setUnitPrice(new Double(value.toString()));
+			} else if (key.equals("Quantity")) {
+				this.setQuantity((short) value);
+			} else if (key.equals("Discount")) {
+				this.setDiscount((float) value);
+			} else if (key.equals("ExtendedPrice")) {
+				this.setExtendedPrice(new Double(value.toString()));
+			} else if (key.equals("Freight")) {
+				this.setFreight(new Double(value.toString()));
 			}
-		} else if (key.equals("ShipperName")) {
-			this.setShipperName((String) value);
-		} else if (key.equals("ProductID")) {
-			this.setProductID((int) value);
-		} else if (key.equals("ProductName")) {
-			this.setProductName((String) value);
-		} else if (key.equals("UnitPrice")) {
-			this.setUnitPrice(new Double(value.toString()));
-		} else if (key.equals("Quantity")) {
-			this.setQuantity((short) value);
-		} else if (key.equals("Discount")) {
-			this.setDiscount((float) value);
-		} else if (key.equals("ExtendedPrice")) {
-			this.setExtendedPrice(new Double(value.toString()));
-		} else if (key.equals("Freight")) {
-			this.setFreight(new Double(value.toString()));
 		}
 	}
 }

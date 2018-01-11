@@ -39,27 +39,26 @@ public class Main {
 		Map<String, Object> hmapForInvoice = new HashMap<String, Object>();
 		List<ODataEntry> arrlistForInvoice = new ArrayList<ODataEntry>();
 		List<Invoice> InvoiceList = new ArrayList<Invoice>();
+		boolean control = true;
 
 		String serviceUrl = "http://services.odata.org/V2/Northwind/Northwind.svc";
 		String usedFormat = servicesForInvoice.APPLICATION_JSON;
 		Edm edm = servicesForInvoice.readEdm(serviceUrl);
-		
+
 		ODataFeed feedForInvoice = servicesForInvoice.readFeed(edm, serviceUrl, usedFormat, "Invoices");
 		arrlistForInvoice = feedForInvoice.getEntries();
-		
+
 		for (int i = 0; i < arrlistForInvoice.size(); i++) {
-			Invoice Invoice = new Invoice();
+			Invoice invoice = new Invoice();
 			hmapForInvoice = arrlistForInvoice.get(i).getProperties();
 
 			for (Entry<String, Object> entry : hmapForInvoice.entrySet()) {
 				String key = entry.getKey();
 				Object value = entry.getValue();
-				Invoice.setInvoiceAttributes(key, value);
+				invoice.setInvoiceAttributes(key, value, control);
 			}
-			InvoiceList.add(Invoice);
+			InvoiceList.add(invoice);
 		}
-		
-		
 	}
-	
+
 }

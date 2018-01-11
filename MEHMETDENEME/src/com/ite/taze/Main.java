@@ -32,33 +32,28 @@ import org.apache.olingo.odata2.api.exception.ODataException;
 
 public class Main {
 
-
 	public static void main(String[] args) throws MalformedURLException, IOException, ODataException {
 
 		ServicesForInvoice servicesForInvoice = new ServicesForInvoice();
 		Map<String, Object> hmapForInvoice = new HashMap<String, Object>();
 		List<ODataEntry> arrlistForInvoice = new ArrayList<ODataEntry>();
 		List<Invoice> InvoiceList = new ArrayList<Invoice>();
-		boolean control = true;
-
 		String serviceUrl = "http://services.odata.org/V2/Northwind/Northwind.svc";
-		String usedFormat = servicesForInvoice.APPLICATION_JSON;
+		String usedFormat = ServicesForInvoice.APPLICATION_JSON;
 		Edm edm = servicesForInvoice.readEdm(serviceUrl);
-
 		ODataFeed feedForInvoice = servicesForInvoice.readFeed(edm, serviceUrl, usedFormat, "Invoices");
 		arrlistForInvoice = feedForInvoice.getEntries();
 
 		for (int i = 0; i < arrlistForInvoice.size(); i++) {
-			Invoice invoice = new Invoice();
+			Invoice Invoice = new Invoice();
 			hmapForInvoice = arrlistForInvoice.get(i).getProperties();
 
 			for (Entry<String, Object> entry : hmapForInvoice.entrySet()) {
 				String key = entry.getKey();
 				Object value = entry.getValue();
-				invoice.setInvoiceAttributes(key, value, control);
+				Invoice.setInvoiceAttribute(key, value, true);
 			}
-			InvoiceList.add(invoice);
+			InvoiceList.add(Invoice);
 		}
 	}
-
 }

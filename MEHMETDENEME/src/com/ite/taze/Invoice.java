@@ -6,12 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import org.apache.olingo.odata2.api.edm.Edm;
 import org.apache.olingo.odata2.api.ep.entry.ODataEntry;
 import org.apache.olingo.odata2.api.ep.feed.ODataFeed;
 import org.apache.olingo.odata2.api.exception.ODataException;
-import org.apache.olingo.odata2.core.ep.feed.ODataDeltaFeedImpl;
 
 public class Invoice {
 
@@ -266,11 +264,11 @@ public class Invoice {
 		} else if (key.equals("OrderID")) {
 			this.setOrderID((int) value);
 
-			ServicesForOrder servicesForOrder = new ServicesForOrder();
+			ServiceFunctions servicesForOrder = new ServiceFunctions();
 			Map<String, Object> hmapForOrder = new HashMap<String, Object>();
 			List<ODataEntry> arrlistForOrder = new ArrayList<ODataEntry>();
 			String serviceUrl = "http://services.odata.org/V2/Northwind/Northwind.svc";
-			String usedFormat = ServicesForOrder.APPLICATION_JSON;
+			String usedFormat = ServiceFunctions.APPLICATION_JSON;
 			Edm edm = servicesForOrder.readEdm(serviceUrl);
 
 			ODataFeed feedForOrder = servicesForOrder.readFeed(edm, serviceUrl, usedFormat, "Orders",

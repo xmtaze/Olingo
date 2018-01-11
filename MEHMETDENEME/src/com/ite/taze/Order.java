@@ -5,14 +5,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
-
 import org.apache.olingo.odata2.api.edm.Edm;
 import org.apache.olingo.odata2.api.ep.entry.ODataEntry;
 import org.apache.olingo.odata2.api.ep.feed.ODataFeed;
 import org.apache.olingo.odata2.api.exception.ODataException;
-import org.apache.olingo.odata2.core.ep.entry.ODataEntryImpl;
 import org.apache.olingo.odata2.core.ep.feed.ODataDeltaFeedImpl;
 
 public class Order {
@@ -141,11 +138,11 @@ public class Order {
 			}
 			
 			if (retrieveFromDB == true) {
-				ServicesForOrder servicesForInvoice = new ServicesForOrder();
+				ServiceFunctions servicesForInvoice = new ServiceFunctions();
 				Map<String, Object> hmapForInvoice = new HashMap<String, Object>();
 				List<ODataEntry> arrlistForInvoice = new ArrayList<ODataEntry>();
 				String serviceUrl = "http://services.odata.org/V2/Northwind/Northwind.svc";
-				String usedFormat = ServicesForOrder.APPLICATION_JSON;
+				String usedFormat = ServiceFunctions.APPLICATION_JSON;
 				Edm edm = servicesForInvoice.readEdm(serviceUrl);
 
 				ODataFeed feedForOrder = servicesForInvoice.readFeed(edm, serviceUrl, usedFormat, "Invoices", null, null, (int) value);

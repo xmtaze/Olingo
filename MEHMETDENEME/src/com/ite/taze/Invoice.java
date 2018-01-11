@@ -15,7 +15,7 @@ import org.apache.olingo.odata2.core.ep.feed.ODataDeltaFeedImpl;
 
 public class Invoice {
 
-	private Order order = null;
+	public Order order = null;
 
 	private String ShipName;
 	private String ShipAddress;

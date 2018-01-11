@@ -18,7 +18,7 @@ import org.apache.olingo.odata2.core.ep.feed.ODataDeltaFeedImpl;
 public class Order {
 
 	List<Order_Detail> orderDetails;
-	private Invoice invoice = null;
+	public Invoice invoice = null;
 
 	private int OrderID;
 	private String CustomerID;
